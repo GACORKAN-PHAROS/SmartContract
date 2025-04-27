@@ -8,11 +8,11 @@ import {MockUSDC} from "../src/MockUSDC.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract VaultTest is Test {
-    Vault public vault;
-    YieldzAVS public yieldzAVS;
-    MockUSDC public mockUSDC;
+    Vault public vault; // instance kontrak Vault yang akan di test
+    YieldzAVS public yieldzAVS; // instance kontrak YieldAVS
+    MockUSDC public mockUSDC; // Token USDC untuk testing
 
-    address operator1 = makeAddr("operator1");
+    address operator1 = makeAddr("operator1"); // alamat simulasi untuk operator AVS
 
     function setUp() public {
         mockUSDC = new MockUSDC();
@@ -33,14 +33,15 @@ contract VaultTest is Test {
 
       // // AVS
       vm.startPrank(operator1);
-      IERC20(vault.token()).transferFrom(address(vault), operator1, 500_000);
-      IERC20(vault.token()).approve(address(yieldzAVS), 500_000);
+      IERC20(vault.token()).transferFrom(address(vault), operator1, 500_000); // <-
+      IERC20(vault.token()).approve(address(yieldzAVS), 500_000); // <-
       yieldzAVS.manageFund(500_000);
 
       // Distribute yield
-      IERC20(vault.token()).transferFrom(address(vault), operator1, 500_000);
+      IERC20(vault.token()).transferFrom(address(vault), operator1, 500_000); // <-
       IERC20(address(mockUSDC)).approve(address(yieldzAVS), 500_000);
       yieldzAVS.distributeYield(500_000);
+      vm.stopPrank();
     }
 
 
